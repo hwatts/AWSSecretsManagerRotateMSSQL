@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Amazon.Lambda.Core" Version="1.0.0" />
+    <PackageReference Include="Amazon.Lambda.Serialization.Json" Version="1.1.0" />
+    <PackageReference Include="AWSSDK.SecretsManager" Version="3.3.0.5" />
+    <PackageReference Include="System.Data.Common" Version="4.3.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.4.3" />
+    <PackageReference Include="Microsoft.SqlServer.SqlManagementObjects" Version="140.17235.0" />
+    <PackageReference Include="System.Diagnostics.Debug" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DotNetCliToolReference Include="Amazon.Lambda.Tools" Version="2.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="DescribeSecret.cs" />
+    <Compile Remove="EmptyClass.cs" />
+  </ItemGroup>
+</Project>
