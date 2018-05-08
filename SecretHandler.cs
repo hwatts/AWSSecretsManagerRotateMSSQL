@@ -111,7 +111,15 @@ namespace RotateMssql
                 MoveToVersionId = token,
                 RemoveFromVersionId = currentVersion
             });
-            Console.WriteLine("finishSecret: Successfully marked changed password as AWSCURRENT");
+            Console.WriteLine($"finishSecret: Successfully marked changed password as AWSCURRENT and removed AWSCURRENT label from {currentVersion}");
+
+            asyncResult = client.UpdateSecretVersionStageAsync(new UpdateSecretVersionStageRequest
+            {
+                SecretId = secretId,
+                VersionStage = "AWSPENDING",
+                RemoveFromVersionId = token
+            });
+            Console.WriteLine($"finishSecret: Successfully removed AWSPENDING label from {token}");
 
         }
 
