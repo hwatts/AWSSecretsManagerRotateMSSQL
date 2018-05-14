@@ -43,7 +43,8 @@ namespace RotateMssql
                     SecretString = JsonConvert.SerializeObject(secretString),
                     VersionStages = new List<string> { "AWSPENDING" }
                 });
-                Console.WriteLine("createSecret: Pending secret successfully set for " + secretId);
+                Console.WriteLine($"createSecret: Pending secret successfully set for {secretId} - " +
+                                  $"response code: {asyncResult.Result.HttpStatusCode.ToString()}");
             }
         }
 
@@ -104,22 +105,26 @@ namespace RotateMssql
                 return;
             }
 
-            var asyncResult = client.UpdateSecretVersionStageAsync(new UpdateSecretVersionStageRequest
+            var asyncMakeCurrentResult = client.UpdateSecretVersionStageAsync(new UpdateSecretVersionStageRequest
             {
                 SecretId = secretId,
                 VersionStage = "AWSCURRENT",
                 MoveToVersionId = token,
                 RemoveFromVersionId = currentVersion
             });
-            Console.WriteLine($"finishSecret: Successfully marked changed password as AWSCURRENT and removed AWSCURRENT label from {currentVersion}");
+            Console.WriteLine($"finishSecret: Attempting to mark changed password as AWSCURRENT and removed AWSCURRENT label from {currentVersion}");
+            // Access Result object to ensure processing completes synchronously
+            Console.WriteLine("finishSecret: Call to set as current returned " + asyncMakeCurrentResult.Result.HttpStatusCode.ToString());
 
-            asyncResult = client.UpdateSecretVersionStageAsync(new UpdateSecretVersionStageRequest
+            var asyncRemovePendingResult = client.UpdateSecretVersionStageAsync(new UpdateSecretVersionStageRequest
             {
                 SecretId = secretId,
                 VersionStage = "AWSPENDING",
                 RemoveFromVersionId = token
             });
-            Console.WriteLine($"finishSecret: Successfully removed AWSPENDING label from {token}");
+            Console.WriteLine($"finishSecret: Attempting to remove AWSPENDING label from {token}");
+            // Access Result object to ensure processing completes synchronously
+            Console.WriteLine("Call to remove pending label returned HTTP code:" + asyncRemovePendingResult.Result.HttpStatusCode.ToString());
 
         }
 
